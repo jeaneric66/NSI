@@ -18,10 +18,10 @@ Et la suite, nous allons travailler avec des notebooks, ici le fichier S1-basesp
 
 <hr>
 
-Installer Python sur son ordinatuer !
+Installer Python sur son ordinateur !
 D'abord on vérifie que Python n'est pas installé...
 
-S'il l'est quelle est la version ?
+S'il l'est, quelle est la version ?
 
 Il est installé de base sur certains systèmes d'exploitation (les bons d'ailleurs).
 
@@ -59,9 +59,11 @@ Quelques précisions :
 
 
  En ce qui concerne l'usage de Jupyter Notebook au lycée, on pourrait faire commme cela 
- <img src="bash.png"/> mais à ce jour cela ne fonctionne pas !
+ <img src="bash.png"/> 
+ 
+ mais à ce jour cela ne fonctionne pas !
 
  Donc on passe par une version en ligne via ce site :
- [Jupyter on line ](https://jupyter.org/try) et on clique sur Try Classic notebook ou Try Jupytere Lab.
+ [Jupyter on line ](https://jupyter.org/try) et on clique sur Try Classic notebook ou Try Jupyter Lab.
 
  Après suivant le nombre de connexions... il se peut que cela soit pénible... faute de mieux à ce jour, je vais mettre la version PDF du fichier de travail. Il faudra ensuite appliquer les consignes données en classe et utiliser Pyzo ou Idle par exemple pour le côté Python.
