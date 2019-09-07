@@ -67,3 +67,24 @@ Quelques précisions :
  [Jupyter on line ](https://jupyter.org/try) et on clique sur Try Classic notebook ou Try Jupyter Lab.
 
  Après suivant le nombre de connexions... il se peut que cela soit pénible... faute de mieux à ce jour, je vais mettre la version PDF du fichier de travail. Il faudra ensuite appliquer les consignes données en classe et utiliser Pyzo ou Idle par exemple pour le côté Python.
+
+ <hr>
+
+ En informatique on peut en apprendre tous les jours, c'est d'ailleurs ce qui fait le charme de cette discipline  comme en Mathématiques d'ailleurs mais ce n'est pas le sujet du jour. 
+ 
+ Mon excellente collègue, Madame Bessonnet m'avait indiqué que l'on pouvait aussilire des fichiers Jypyter Notebook via les utilitaires mis en ligne par Google. 
+
+ J'ai testé pour vous et cela marche aussi, mais pour cela il faut un compte Google ! On peut aussi être plus curieux et lire ceci [Six easy ways to run your Jupyter Notebook in the cloud](https://www.dataschool.io/cloud-services-for-jupyter-notebook/)
+
+ Un truc pas mal c'est que l'on peut lier directement mon dépôt Github à l'utilitaire mis en place par Google ! 
+
+ 1. le lien [Colab de Google](https://colab.research.google.com/notebooks/welcome.ipynb)
+
+ 2. Se connecter à son compte Google !
+
+ 3. fichier : importer un notebook
+ 4. Choisir l'onglet github et chercher juste mon nom de dépôt : jeaneric66
+ 5. Choisir le bon fichier .ipynb 
+ 6. L'enregistrer dans son Drive, le renommer et travailler avec !
+
+ Fin du jour le 07/09 à 18:40 !
