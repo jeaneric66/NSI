@@ -88,3 +88,6 @@ Quelques précisions :
  6. L'enregistrer dans son Drive, le renommer et travailler avec !
 
  Fin du jour le 07/09 à 18:40 !
+ <hr>
+ Ajout de deux fichiers : exemple.txt que l'on peut créer directement avec un simple éditeur de textes. Ensuite une feuille d'exercices (comme si on avait pas assez de travail...) pour progresser en python.
+ Pour cette dernière feuille faire l'essentiel en débranché si possible !
