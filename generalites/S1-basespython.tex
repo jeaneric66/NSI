@@ -1,0 +1,1552 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{S1-basespython}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    {Le langage Python}
+
+\begin{figure}
+\centering
+%\includegraphics{python.png}
+\caption{logo}
+\end{figure}
+
+    \begin{quote}
+Python est un langage de programmation, développé en \textbf{1989} par
+\textbf{Guido Von Rossum}, à l'université d'Amsterdam. Il est simple
+d'usage, concis, libre et gratuit, multiplateforme, largement répandu,
+riche de bibliothèques adaptées et bénéficiant d'une vaste communauté
+d'auteurs dans le monde éducatif.
+\end{quote}
+
+Il permet d'interagir avec la machine à l'aide d'un programme appelé
+\emph{interprète Python}. On peut l'utiliser de deux façons différentes.
+La première méthode consiste en un \emph{dialogue avec l'interprète}.
+c'est le mode \textbf{interactif}.
+
+Le second consiste à \emph{écrire un programme ou code source dans un
+fichier}, c'est à dire une suite d'instructions, puis à le faire
+exécuter par l'interprète Python. C'est le \textbf{mode programme}.
+
+On peut utiliser différents environnements de développement : Idle,
+Pyzo, Spyder, Pyscripter\ldots, qui permettent d'utiliser les deux modes
+simultanément.
+
+Mais dans un premier temps, vous allez le faire directement dans ce
+\textbf{notebook}, au fur et à mesure du cours.
+
+    \hypertarget{sommaire}{%
+\subsection{Sommaire}\label{sommaire}}
+
+\begin{quote}
+\hyperref[op]{1. Les opérateurs}
+\end{quote}
+
+\begin{quote}
+\hyperref[com]{2. Commandes de bases}
+\end{quote}
+
+\begin{quote}
+\hyperref[cond]{3. Les conditions}
+\end{quote}
+
+\begin{quote}
+\hyperref[bou]{4. Les boucles}
+\end{quote}
+
+\begin{quote}
+\hyperref[fonc]{5. Les fonctions}
+\end{quote}
+
+\begin{quote}
+\hyperref[ch]{6. Les chaînes de caractères}
+\end{quote}
+
+\begin{quote}
+\hyperref[boo]{7. Les booléens}
+\end{quote}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k+kn}{import} \PY{n}{Latex}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{les-opuxe9rateurs}{%
+\subsection{1. Les opérateurs}\label{les-opuxe9rateurs}}
+
+    On peut utilser l'interpréteur Python comme une simple machine à écrire
+:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{l+m+mi}{5} \PY{o}{+} \PY{l+m+mi}{3}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+8
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{l+m+mi}{7} \PY{o}{\PYZhy{}} \PY{l+m+mi}{8}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+-1
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{l+m+mi}{16} \PY{o}{/} \PY{l+m+mi}{5}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+3.2
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Maintenant certaines opérations un peu moins classiques sont à connaître
+:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{l+m+mi}{5} \PY{o}{*}\PY{o}{*} \PY{l+m+mi}{3}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+125
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{l+m+mi}{16} \PY{o}{/}\PY{o}{/} \PY{l+m+mi}{5}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+3
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{l+m+mi}{16} \PY{o}{\PYZpc{}} \PY{l+m+mi}{5}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+1
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Exercice 1 :
+
+Précisez ce que font les opérateurs :
+
+**
+
+//
+
+\(\%\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Réponse} \PY{p}{:}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Opérateurs de comparaison} - x == y : test d'égalité - x != y :
+différent - x \textgreater{} y : supérieur - x \textgreater= y :
+supérieur ou égal - x \textless{} y : inférieur - x \textless= y :
+inférieur ou égal
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{p}{,} \PY{n}{y} \PY{o}{=} \PY{l+m+mi}{3} \PY{p}{,} \PY{l+m+mi}{2}
+\PY{n}{x} \PY{o}{==} \PY{n}{y}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+False
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{!=} \PY{n}{y}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+True
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \hypertarget{commandes-de-base}{%
+\subsection{2. Commandes de base}\label{commandes-de-base}}
+
+    Afficher un message de bienvenue avec \textbf{print()}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Hello world !}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque
+
+Nous sommes dans un interpréteur de code, il est inutile de d'utiliser
+\textbf{print()}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Hello world !}\PY{l+s+s2}{\PYZdq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On demande une donnée (valeur numérique, texte) à l'utilisateur avec
+\textbf{input()}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{input}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{quel est ton prénom ?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque
+
+L'ordinateur affiche votre réponse, mais ne la garde pas en mémoire !
+Impossible d'utiliser cette réponse par la suite\ldots{}
+
+C'est pourquoi on utilise des \textbf{variables} dans les programmes.
+
+On leur donne un nom, mais pour l'ordinateur il s'agit d'une référence
+désignant une \textbf{adresse mémoire}, c'est à dire un emplacement
+précis de la mémoire. A cet emplacement est stocké une valeur bien
+déterminée.
+
+Pour \textbf{affecter} une valeur à une variable, on utilise le symbole
+\textbf{=}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{var} \PY{o}{=} \PY{n+nb}{input}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Quel est ton nom ?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Maintenant, on peut récupérer la réponse donnée en appelant la variable
+dans laquelle on l'a stockée :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{var}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Bonjour }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{var}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque : .
+
+Pour afficher un texte, on l'écrit entre guillemets '' ``, mais pour
+afficher une variable on écrit simplement son nom. On peut les afficher
+simultanément en les séparant par une virgule.
+
+Un nom de variable respecte la syntaxe suivante: - commence par une
+lettre - ne contient que des lettres (sans accents), des chiffres et le
+caractère \_.
+
+Python est sensible à la casse (c'est à dire l'emploi des majuscules et
+des minuscules) et a des mots clé réservés.
+
+Par convention on nomme les variables avec des lettres minuscules, mais
+on peut ajouter une majuscule pour une meilleure lisibilité.
+
+Par exemple : \textbf{monPrenom}
+
+    On peut combiner plusieurs instructions :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{8+4 =}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+m+mi}{8}\PY{o}{+}\PY{l+m+mi}{4}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{les-variables}{%
+\subsubsection{Les variables}\label{les-variables}}
+
+Il en existe différents types, par exemple :
+
+\begin{itemize}
+\item
+  les nombres entiers, sont les \textbf{integer}, notés \textbf{int}
+\item
+  les nombres décimaux, sont les \textbf{float}.
+\item
+  les chaînes de caractères constituées de caractères alphabétiques, de
+  mots, de phrases ou de suites de symboles quelconques, sont les
+  \textbf{strings}, notées \textbf{str} (Ce qui est noté entre
+  guillemets simples ou doubles (voir triples) est automatiquement de
+  type str.)
+\item
+  les booléens, notés \emph{bool}, qui ne prennent que deux valeurs :
+  True ou False. Ils permettent de tester si une expression logique est
+  vraie ou fausse.
+\end{itemize}
+
+Pour connaitre le type d'une variable, il suffit de taper
+\textbf{type(variable)}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{a} \PY{o}{=} \PY{l+m+mf}{2.5}   \PY{c+c1}{\PYZsh{}on utilise le . pour noter les nombres décimaux}
+\PY{n+nb}{type}\PY{p}{(}\PY{n}{a}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{b} \PY{o}{=} \PY{l+m+mi}{10}
+\PY{n}{a} \PY{o}{\PYZlt{}} \PY{n}{b}    \PY{c+c1}{\PYZsh{}le test est vrai, python renvoie un booléen}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On peut changer le type d'une variable :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{c} \PY{o}{=} \PY{l+m+mi}{2}
+\PY{n}{d} \PY{o}{=} \PY{n+nb}{float}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}  \PY{c+c1}{\PYZsh{}d est un nombre réel}
+\PY{n}{d}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{e} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}      \PY{c+c1}{\PYZsh{}e est une chaîne de caractères}
+\PY{n+nb}{print}\PY{p}{(}\PY{n+nb}{type}\PY{p}{(}\PY{n}{e}\PY{p}{)}\PY{p}{)}
+\PY{n}{e} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{e}\PY{p}{)}  \PY{c+c1}{\PYZsh{}e devient un entier}
+\PY{n+nb}{print}\PY{p}{(}\PY{n+nb}{type}\PY{p}{(}\PY{n}{e}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Pour tester si deux variables sont égales ou non, on utlise \textbf{==}
+(à ne pas confondre avec l'affectation) ou \textbf{!=}
+
+La réponse retournée est sous la forme d'un booléen.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{a} \PY{o}{==} \PY{l+m+mi}{2}\PY{p}{)}   \PY{c+c1}{\PYZsh{}est\PYZhy{}ce que a est égal à 2 ?}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{b} \PY{o}{==} \PY{k+kc}{False}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{a} \PY{o}{!=} \PY{l+m+mi}{5}\PY{p}{)}   \PY{c+c1}{\PYZsh{}est\PYZhy{}ce que a est différent de 5 ?}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{b} \PY{o}{!=} \PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque sur les commentaires de code
+
+Il est très important de commenter vos programmes, pour que d'autres
+puissent les comprendre et que vous-même puissiez y revenir plus tard
+sans être perdu.
+
+Pour cela on utilise le symbole \textbf{\#}. Tout ce qui suit ce
+caractère ne sera pas exécuté, c'est un commentaire.
+
+    Exercice 2 :
+
+Ecrire ci-dessous un programme demandant deux nombres entiers et
+affichant la somme de ces nombres.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}code}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque
+
+La commande input() donne une \textbf{chaîne de caractères}, même si
+l'on entre un nombre.
+
+** Ne pas confondre le caractère 4 avec le nombre 4 suivnat l'usage,
+Python c'est faire la différence !
+
+Il vaut mieux utiliser eval(input()) qui reconnaît si la variable donnée
+est un nombre ou une chaîne de caractères.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{a} \PY{o}{=} \PY{n+nb}{eval}\PY{p}{(}\PY{n+nb}{input}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Donner un nombre :}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\PY{n}{b} \PY{o}{=} \PY{n+nb}{eval}\PY{p}{(}\PY{n+nb}{input}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Donner un nombre :}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\PY{n}{a}\PY{o}{+}\PY{n}{b}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On peut faire des affectations multiples :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{n}{y} \PY{o}{=} \PY{l+m+mi}{2}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{x}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ y = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On peut affecter des valeurs à plusieurs variables en même temps :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{a}\PY{p}{,}\PY{n}{b} \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{5}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{a =}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{a}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ et b = }\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{b}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Exercice 3
+
+\begin{verbatim}
+Compléter le code ci-dessous pour échanger les valeurs des variables a et b, puis les afficher.
+\end{verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{a} \PY{o}{=} \PY{l+m+mi}{10}
+\PY{n}{b} \PY{o}{=} \PY{l+m+mi}{15}
+\PY{c+c1}{\PYZsh{}suite du code}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Il peut être nécessaire d'\textbf{incrémenter} une variable (l'augmenter
+d'une certaine valeur) ou de la décrémenter (la diminuer d'une certaine
+valeur).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{nb} \PY{o}{=} \PY{l+m+mi}{5}
+\PY{n}{nb} \PY{o}{=} \PY{n}{nb} \PY{o}{+} \PY{l+m+mi}{1}   \PY{c+c1}{\PYZsh{}on augmente nb de 1}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{nb}\PY{p}{)}
+\PY{n}{nb} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}       \PY{c+c1}{\PYZsh{}même chose}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{nb}\PY{p}{)}
+\PY{n}{nb} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{l+m+mi}{2}       \PY{c+c1}{\PYZsh{}on diminue nb de 2}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{nb}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarques
+
+\(\bullet\) Les instructions d'un programme s'exécutent dans l'ordre où
+elles sont écrites !
+
+\(\bullet\) Lorsque l'on fait de la programmation on commet des erreurs
+(des \textbf{bugs}), et l'ensemble des techniques pour les détecter et
+les corriger s'appelle \textbf{debug}.
+
+Il y a trois types d'erreurs :
+
+\(-\) les \textbf{erreurs de syntaxe} : les règles du langage n'ont pas
+été respectées (oublie d'une parenthèse, erreur de frappe\ldots) et
+produisent un arrêt de fonctionnement ;
+
+\(-\) les \textbf{erreurs sémantiques} : le programme s'exécute
+parfaitement, pas de message d'erreur, mais le résultat n'est pas celui
+que l'on attend ;
+
+\(-\) les \textbf{erreurs à l'exécution} : le programme fonctionne, mais
+des circonstances particulières (par exemple unfichier déplacé\ldots) se
+présentent et une erreur se produit.
+
+\begin{quote}
+Il faudra sans cesse modifier et corriger vos programmes ! Pour vous y
+aider, l'interpréteur Python affiche des messages d'erreurs, précisant
+le type de l'erreur et la ligne où elle s'est produite.
+\end{quote}
+
+    \hypertarget{les-modules}{%
+\subsubsection{Les modules}\label{les-modules}}
+
+Beaucoup de programmes ont déjà été écrit sous Python. On en a regroupé
+certains dans des fichiers appelés \textbf{modules} ou
+\textbf{bibliothèques}.
+
+Certains sont installés en même temps que Python. Mais on peut ensuite
+en utiliser d'autres, suivant nos besoins. Il suffit de les ``appeler''
+en début de programme.
+
+Par exemple, il existe un module de mathématiques (math) contenant des
+fonctions comme cosinus et sinus, des nombres tels que pi\ldots{}
+
+Pour utiliser ces modules, on tape la commande : from le-nom-du-module
+import*
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{math} \PY{k+kn}{import}\PY{o}{*}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{pi}\PY{p}{)}   \PY{c+c1}{\PYZsh{}on affiche une valeur approchée de pi}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{sqrt}\PY{p}{(}\PY{l+m+mi}{25}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{}on obtient la racine carré de 25}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Un autre module très utile est \textbf{random}, car il permet de générer
+des nombres aléatoires.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{random} \PY{k+kn}{import}\PY{o}{*}
+\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{50}\PY{p}{)}   \PY{c+c1}{\PYZsh{}obtenir un nombre entier au hasard entre 1 et 50}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{les-conditions}{%
+\subsection{3. Les conditions}\label{les-conditions}}
+
+Pour tester une certaine condition et modifier le comportement du
+programme en conséquence, on utilise l'instruction \textbf{if} (si).
+
+Exercice 4
+
+Tester le programme ci-dessous avec différentes valeurs :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{nombre} \PY{o}{=} \PY{n+nb}{eval}\PY{p}{(}\PY{n+nb}{input}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Donner un nombre :}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\PY{k}{if} \PY{p}{(}\PY{n}{nombre} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Le nombre est négatif.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Si la condition indiquée est vraie, ici le nombre est négatif, alors on
+exécute l'instruction d'affichage.
+
+On peut rajouter une instruction pour le cas où la condition est fausse,
+voir rajouter d'autres cas.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{nombre} \PY{o}{=} \PY{n+nb}{eval}\PY{p}{(}\PY{n+nb}{input}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Donner un nombre :}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\PY{k}{if} \PY{p}{(}\PY{n}{nombre} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Le nombre est négatif.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{elif} \PY{p}{(}\PY{n}{nombre} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Le nombre est positif}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{else}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Le nombre est nul.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque importante
+
+Le décalage à droite se nomme l'\textbf{indentation}. Il est obligatoire
+pour signifier que les instructions suivantes sont dans la condition.
+
+Les parenthèses autour de la condition ne sont pas obligatoires.
+
+    Exercice 5
+
+Ecrire un programme qui permet de tester si un nombre donné est pair ou
+impair, et qui l'affiche.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}code}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{les-boucles}{%
+\subsection{4. Les boucles}\label{les-boucles}}
+
+    L'une des tâches que les machines font le mieux est la répétition de
+tâches identiques.
+
+Pour cela on peut utiliser une boucle \textbf{while} (tant que).
+
+\emph{Tant que la condition indiquée est vraie}, on répète le bloc
+d'instructions de la boucle, que l'on repère grâce à l'indentation des
+lignes. Si la \emph{condition est fausse}, le bloc d'instruction est
+ignoré.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{z} \PY{o}{=} \PY{l+m+mi}{0}
+\PY{k}{while} \PY{p}{(}\PY{n}{z} \PY{o}{\PYZlt{}} \PY{l+m+mi}{7}\PY{p}{)}\PY{p}{:}
+    \PY{n}{z} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{z}\PY{p}{,}\PY{n}{end} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ }\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque
+
+L'instruction \textbf{end = '' ``} signifie que l'on veut afficher les
+nombres sur la même ligne, séparés d'un espace.
+
+La variable évaluée dans la condition doit exister au préalable.
+
+Si la condition reste \emph{toujours vraie}, alors le corps de la boucle
+est répété indéfiniment (jusqu'à ce que Python cesse de fonctionner). Il
+faut absoluement l'éviter !
+
+    Exercice 6
+
+Ecrire un programme qui affiche les 20 premiers termes de la table de
+multiplication de 8.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}code}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Exercice 7
+
+On lance deux dés à 6 faces parfaitement équilibrés et on additionne les
+deux résultats obtenus.
+
+Ecrire un programme qui simule cette expérience et indique le nombre de
+lancés nécessaires pour que la somme soit égale à 12.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}code}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Une autre boucle, la boucle \textbf{for} (pour).
+
+On répète un certain nombre de fois le bloc d'instructions
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{i}\PY{p}{,}\PY{n}{end} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{;}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque
+
+\textbf{i} est ce qu'on appelle un \textbf{compteur}, qui prendra
+successivement les valeurs entières de 0 à 9.
+
+Et à chaque fois, on exécuter le bloc d'instructions de la boucle.
+
+    Quelques variantes :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{i}\PY{p}{,}\PY{n}{end} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{;}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{i}\PY{p}{,}\PY{n}{end} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{;}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Exercice 8
+
+Ecrire un programme qui calcule la somme des 25 premiers nombres
+entiers.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}code}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Exercice 9
+
+Ecrire un programme faisant deviner un nombre entier compris entre 1 et
+100.
+
+Ce nombre sera choisi au hasard par l'ordinateur ; on indiquera si le
+nombre proposé est trop grand ou trop petit, ainsi que le nombre de
+propositions faites jusque-là.
+
+Si l'on dépasse les 6 propositions, on arrête le jeu et on affiche Game
+Over.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}code}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{les-fonctions}{%
+\subsection{5. Les fonctions}\label{les-fonctions}}
+
+    Remarque importante Les mots suivants ne peuvent être utilisés comme nom
+de variables, ni comme noms de fonctions :
+
+\begin{quote}
+and ; as ; assert ; break ; class ; continue ; def ; del ; elif ; else ;
+except ; False ; finally ; for ; from ; global ; if ; import ; in ; is ;
+lambda ; None ; nonlocal ; not ; or ; pass ; raise ; return ; True ; try
+; while ; with ; yield
+\end{quote}
+
+    On a déjà utilisé certaines \textbf{fonctions} préprogrammées, comme
+\textbf{print()}, \textbf{input()}, certaines sont regroupées dans des
+\emph{modules}\ldots{} ; on peut également en écrire de nouvelles.
+
+Ce sont des suites d'instructions que l'on isolent du reste du
+programme, auxquelles on donne un nom, ce qui permet d'appeler la
+fonction par ce nom à n'importe quel endroit du programme.
+
+On peut ainsi utiliser ces fonctions sans avoir à les réécrire, et
+autant de fois qu'on le souhaite. Elles permettent de rendre le code du
+programme plus court et plus facile à comprendre.
+
+La syntaxe d'une fonction :
+
+\textbf{def nom\_fonction(paramètres):}
+
+\begin{quote}
+Bloc d'instructions
+\end{quote}
+
+    Remarques
+
+\begin{itemize}
+\item
+  il faut indenter les instructions de la fonction
+\item
+  on peut donner un ou plusieurs paramètres nécessaires à l'exécution
+  des instructions
+\item
+  une fonction ne fait rien tant qu'elle n'a pas été appelée ; on
+  l'appelle par son nom.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{table\PYZus{}de\PYZus{}7}\PY{p}{(}\PY{p}{)}\PY{p}{:}              \PY{c+c1}{\PYZsh{}une fonction sans paramètre}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{11}\PY{p}{)}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{7*}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{i}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{=}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+m+mi}{7}\PY{o}{*}\PY{n}{i}\PY{p}{,}\PY{n}{end} \PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ ; }\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{table\PYZus{}de\PYZus{}7}\PY{p}{(}\PY{p}{)}     \PY{c+c1}{\PYZsh{}on appelle la fonction}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{table\PYZus{}mul}\PY{p}{(}\PY{n}{nb}\PY{p}{,}\PY{n+nb}{max}\PY{p}{)}\PY{p}{:}   \PY{c+c1}{\PYZsh{}on utilise deux paramètres}
+    \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}paramètres :      }
+\PY{l+s+sd}{       nb : la table demandée}
+\PY{l+s+sd}{       max : la valeur maximale de la table\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{max}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{nb}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{*}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{i}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{=}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{nb}\PY{o}{*}\PY{n}{i}\PY{p}{,}\PY{n}{end} \PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ ; }\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}    
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{table\PYZus{}mul}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{,}\PY{l+m+mi}{20}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque
+
+Les triples guillemets dans une fonction, permettent de faire un
+commentaire où l'on précise les paramètres attendus.
+
+    Maintenant, une fonction est créée avant tout pour \textbf{renvoyer une
+valeur}, ce qui se fait avec la commande \textbf{return}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{carre}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{x}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}  \PY{c+c1}{\PYZsh{}cette fonction donne le carré du nombre x donné}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{carre}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Exercice 10
+
+Ecrire une fonction qui permet de trouver les diviseurs d'un nombre
+entier positif non nul, et qui les affiche.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{diviseurs}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+    \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Une valeur entière n non nulle est donné.}
+\PY{l+s+sd}{    Cette fonction affiche l\PYZsq{}ensemble des diviseurs de n\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{pass}            \PY{c+c1}{\PYZsh{}compléter le code}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{variables-locales-et-variables-globales}{%
+\subsubsection{Variables locales et variables
+globales}\label{variables-locales-et-variables-globales}}
+
+    Lorsque des variables sont définies à l'intérieur du corps d'une
+fonction, ces variables ne sont accessibles qu'à la fonction elle-même :
+ce sont des \textbf{variables locales} ;
+
+Lorsque des variables sont définies à l'extérieur d'une fonction : ce
+sont des \textbf{variables globales}. Leur contenu est visible à
+l'intérieur d'une fonction, mais la fonction ne peut pas les modifier.
+
+    Exercice 11
+
+Testez les exemples suivants, et commenter les résultats obtenus.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{monter}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{v} \PY{o}{=} \PY{l+m+mi}{5}
+    \PY{k}{return} \PY{n}{a}\PY{o}{*}\PY{l+m+mi}{2}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{v}\PY{p}{)}  \PY{c+c1}{\PYZsh{}La variable locale v est inconnue à l\PYZsq{}extérieur de la fonction }
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{m} \PY{o}{=} \PY{l+m+mi}{2}
+\PY{k}{def} \PY{n+nf}{test}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{n}{m}\PY{o}{+}\PY{l+m+mi}{1}  \PY{c+c1}{\PYZsh{}on a accès à la variable globale  dans la fonction}
+
+\PY{n}{test}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{test\PYZus{}2}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{m} \PY{o}{=} \PY{n}{m} \PY{o}{+} \PY{l+m+mi}{8}   \PY{c+c1}{\PYZsh{}on ne peut modifier la variable globale m dans la fonction}
+    \PY{k}{return} \PY{n}{m}
+
+\PY{n}{test\PYZus{}2}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{test\PYZus{}2}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{k}{global} \PY{n}{m}    \PY{c+c1}{\PYZsh{}cette déclaration permet de modifier la variable globale dans cette fonction}
+    \PY{n}{m} \PY{o}{=} \PY{n}{m} \PY{o}{+} \PY{l+m+mi}{8}   
+    \PY{k}{return} \PY{n}{m}
+
+\PY{n}{test\PYZus{}2}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{chauxeenes-de-caractuxe8res}{%
+\subsection{6. Chaînes de
+caractères}\label{chauxeenes-de-caractuxe8res}}
+
+    Les chaînes de caractères (string) sont des types de données
+\emph{composites}, car elles rassemblent dans une seule structure un
+ensemble d'entités plus simples : des caractères. Ainsi on peut la
+traiter comme un seul objet, ou bien comme une \emph{séquence} de
+caractères distincts. On doit donc pouvoir \textbf{accéder séparément à
+chacun des caractères} de la chaîne.
+
+Pour cela on utilise la syntaxe suivante :
+
+\textbf{nom\_de\_chaîne{[}indice{]}} où l'indice correspond à la
+position du caractère dans la chaîne. (Attention, la numérotation
+commence à 0)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ch} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Bienvenue sur Mars !}\PY{l+s+s2}{\PYZdq{}}           
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{ch}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}            \PY{c+c1}{\PYZsh{}on accède au premier caractère}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{ch}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{ch}\PY{p}{[}\PY{l+m+mi}{9}\PY{p}{]}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}  \PY{c+c1}{\PYZsh{}l\PYZsq{}espace est un caractère que l\PYZsq{}on peut afficher}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{ch}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{:}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{)}          \PY{c+c1}{\PYZsh{}on affiche une partie de la chaîne : de l\PYZsq{}indice 1 à l\PYZsq{}indice 3!!}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{ch}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}           \PY{c+c1}{\PYZsh{}on affiche le dernier}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{ch}\PY{p}{[}\PY{l+m+mi}{10}\PY{p}{:}\PY{p}{]}\PY{p}{)}           \PY{c+c1}{\PYZsh{}on affiche toute la chaîne à partir de l\PYZsq{}indice 10}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On peut écrire un texte long sur plusieurs lignes grâce au symbole ****
+(\emph{antislash}).
+
+Dans une chaîne de caractères, la séquence \textbf{$\backslash$n** provoque un saut
+de ligne, lorsqu'on utilise la fonction }print()**.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{phrase} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Je vais essayer de ne pas }\PY{l+s+se}{\PYZbs{}}
+\PY{l+s+s2}{faire de fautes d}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ortographe, }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{ }\PY{l+s+se}{\PYZbs{}}
+\PY{l+s+s2}{mais c}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{est très difficile !}\PY{l+s+s2}{\PYZdq{}}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{phrase}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Il existe de nombreuses fonctions permettant de traiter les chaînes de
+caractères, que l'on appelle \textbf{méthodes}.
+
+La syntaxe pour les utiliser : \textbf{nom-chaine.methode()}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{ch}\PY{o}{.}\PY{n}{upper}\PY{p}{(}\PY{p}{)}\PY{p}{)}     \PY{c+c1}{\PYZsh{}tous les caractères s\PYZsq{}écrivent en majuscules}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{ch}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)}\PY{p}{)}     \PY{c+c1}{\PYZsh{}tous les caractères s\PYZsq{}écrivent en minuscules}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{ch}\PY{o}{.}\PY{n}{count}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{e}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{}on indique le nombre de fois où le caractère e apparaît dans la chaîne}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{ch}\PY{o}{.}\PY{n}{find}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{v}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}   \PY{c+c1}{\PYZsh{}on cherche l\PYZsq{}indice de la première occurence du caractère v}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Parmi les fonctions les plus utiles on retrouve également
+\textbf{len(nom\_chaine)} qui indique la longueur de la chaîne.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On peut choisir un caractère au hasard dans la chaîne, avec le module
+\textbf{random} et la fonction \textbf{choice()} :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{random} \PY{k+kn}{import} \PY{n}{choice}  \PY{c+c1}{\PYZsh{}on importe seulement la fonction choice !}
+\PY{n}{choice}\PY{p}{(}\PY{n}{ch}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On peut assembler deux chaînes de caractères, ce qu'on appelle la
+\textbf{concaténation}, en utilisant l'opérateur \textbf{+}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ch2} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Il y fait un peu chaud !!}\PY{l+s+s2}{\PYZdq{}}
+\PY{n}{ch} \PY{o}{+} \PY{n}{ch2}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On peut \textbf{répéter} une partie de la chaîne :
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{ch}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{4}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{5}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Exercice 12
+
+Ecrire un script qui recopie une chaîne (dans une nouvelle variable), en
+insérant des astérisques entre les caractères.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}code de l\PYZsq{}exercice 12.}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque
+
+Les chaînes sont des séquences \textbf{non modifiables} de caractères.
+
+    Exercice 13
+
+Créer un jeu dans lequel un joueur entre un mot, l'ordinateur mélange
+les lettres, et affiche le mot mélangé.
+
+Un second joueur doit alors proposer le mot donné par le premier joueur.
+
+\emph{Aide} : Pour mélanger les lettres on pourra commencer par mélanger
+deux d'entre elles au hasard, puis répéter l'opération plusieurs fois.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}code        }
+\end{Verbatim}
+\end{tcolorbox}
+
+    Une chaîne de caractères étant une \emph{séquence}, on peut la parcourir
+avec le couple d'instructions \textbf{for \ldots{} in \ldots{}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{nom} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Obelix}\PY{l+s+s2}{\PYZdq{}}
+\PY{k}{for} \PY{n}{caractere} \PY{o+ow}{in} \PY{n}{nom}\PY{p}{:}  \PY{c+c1}{\PYZsh{}on traite successivement tous les caractères de la chaîne}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{caractere}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On peut de la même manière chercher si un caractère appartient à la
+chaîne.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{manger} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sanglier}\PY{l+s+s2}{\PYZdq{}}
+\PY{n}{lettre} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}
+\PY{k}{if} \PY{n}{lettre} \PY{o+ow}{in} \PY{n}{manger}\PY{p}{:} \PY{c+c1}{\PYZsh{}on compare chaque caractère de la chaîne à la lettre proposée}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Trouvé !}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{else}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Inconnu !}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{booluxe9ens}{%
+\subsection{7. Booléens}\label{booluxe9ens}}
+
+    Les comparaisons et tests d'égalité sont des expressions qui produisent
+un résultat \textbf{booléen} : vrai (True) ou faux (False).
+
+On peut \textbf{affecter un booléen} à une variable.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{continuer} \PY{o}{=} \PY{k+kc}{True}
+\PY{k}{while} \PY{n}{continuer}\PY{p}{:}              \PY{c+c1}{\PYZsh{}la condition est vraie, on exécute le bloc de la boucle while}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ok}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{poursuivre} \PY{o}{=} \PY{n+nb}{input}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Voulez\PYZhy{}vous continuer ? o/n }\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{k}{if} \PY{n}{poursuivre}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}
+        \PY{n}{continuer} \PY{o}{=} \PY{k+kc}{False}     \PY{c+c1}{\PYZsh{}la condition est fausse, on sort de la boucle}
+\end{Verbatim}
+\end{tcolorbox}
+
+    On associe aux booléens des opérateurs permettent de combiner plusieurs
+tests.
+
+c1 et c2 sont deux conditions :
+
+\textbf{not c1} (la négation) est réalisée lorsque la condition c1 n'est
+pas réalisée ;
+
+\textbf{c1 and c2} (la conjonction) est réalisée lorsque les conditions
+c1 et c2 sont toutes deux réalisées ;
+
+\textbf{c1 or c2} (la disjonction) est réalisée lorsqu'au moins l'une
+des conditions c1 ou c2 est réalisée ;
+
+\textbf{c1 xor c2} (la disjonction exclulsive) est réalisée lorsque
+l'une des deux conditions c1 ou c2 est réalisée, mais pas l'autre ; en
+langage Python, xor s'écrit à l'aide du symbole \textbf{\^{}}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x} \PY{o}{=} \PY{l+m+mi}{5}
+\PY{k}{if} \PY{p}{(}\PY{n}{x} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{l+m+mi}{0}\PY{p}{)} \PY{o+ow}{and} \PY{p}{(}\PY{n}{x} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Ce nombre appartient à l}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{intervalle [0 ; 10]}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{k}{else}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Ce nombre n}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{appartient pas à l}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{intervalle [0 ; 10]}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Remarque
+
+Les parenthèses permettent de mieux visualiser les tests.
+
+    Exercice 14
+
+Créer un jeu demandant un nombre entier compris entre 1 et 100 à un
+joueur et qui lui indique quels sont ses gains, suivant les règles
+suivantes :
+
+\begin{itemize}
+\item
+  si le nombre est pair et supérieur ou égal à 90, il perd 1 euros ;
+\item
+  si le nombre est impair ou compris strictement entre 25 et 90, il ne
+  gagne rien ;
+\item
+  sinon, il gagne 2 euros.
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{} Le code du jeu.}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hyperref[som]{Retour au sommaire}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
