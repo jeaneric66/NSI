@@ -1,3 +1,0 @@
-﻿Ce fichier est un texte brut qui sert d'essai à mon script en langage python.
-
- Donc là, on ne va pas effacer la phrase précédente ?8
